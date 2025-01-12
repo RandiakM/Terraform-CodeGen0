@@ -24,3 +24,6 @@ Thumbs.db
 *.tfstate.backup
 .terraform/
 
+# Package-Lock files
+package-lock.json
+
