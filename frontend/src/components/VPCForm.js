@@ -19,10 +19,12 @@ const VPCForm = () => {
 
     try {
       const response = await axios.post(
-        `${config.apiUrl}/vpc-generate`,
+        '/.netlify/functions/vpc-generate',
         { name, cidrBlock },
         {
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json'
+          },
           timeout: 5000
         }
       );

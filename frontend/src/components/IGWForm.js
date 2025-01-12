@@ -17,7 +17,7 @@ const IGWForm = () => {
       setIsLoadingVPCs(true);
       setError('');
       try {
-        const response = await axios.get('https://terraform-codegen0.netlify.app/api/vpc/list');
+        const response = await axios.get('http://localhost:3000/api/vpc/list');
         if (response.data.success) {
           setVpcs(response.data.vpcs);
         } else {
@@ -42,7 +42,7 @@ const IGWForm = () => {
 
     try {
       const response = await axios.post(
-        'https://terraform-codegen0.netlify.app/api/igw/generate',
+        'http://localhost:3000/api/igw/generate',
         { name, vpcId },
         {
           headers: { 'Content-Type': 'application/json' },
