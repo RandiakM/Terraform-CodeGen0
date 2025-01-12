@@ -1,19 +1,31 @@
 const { MongoClient } = require('mongodb');
-const { generateTerraformSubnet } = require('../utils/terraform');
+const { ObjectId } = require('mongodb');
 
-const handler = async (event, context) => {
+exports.handler = async function(event, context) {
+  // Handle OPTIONS request for CORS
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+      }
+    };
+  }
+
   let client;
   try {
     const { name, vpcId, cidrBlock, az } = JSON.parse(event.body);
     
+    // Input validation
     if (!name || !vpcId || !cidrBlock || !az) {
       return {
         statusCode: 400,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type'
         },
         body: JSON.stringify({ 
           success: false, 
@@ -27,7 +39,7 @@ const handler = async (event, context) => {
 
     // Verify VPC exists
     const vpc = await db.collection('user_inputs').findOne({ 
-      _id: vpcId, 
+      _id: new ObjectId(vpcId),
       type: 'vpc' 
     });
 
@@ -46,13 +58,23 @@ const handler = async (event, context) => {
       };
     }
 
-    const terraformCode = generateTerraformSubnet(name, vpc.name, cidrBlock, az);
+    // Generate Terraform code
+    const terraformCode = `
+resource "aws_subnet" "${name}" {
+  vpc_id     = aws_vpc.${vpc.name}.id
+  cidr_block = "${cidrBlock}"
+  availability_zone = "${az}"
+
+  tags = {
+    Name = "${name}"
+  }
+}`;
     
     // Save user input
     const userInput = await db.collection('user_inputs').insertOne({
       type: 'subnet',
       name,
-      vpcId,
+      vpcId: new ObjectId(vpcId),
       cidrBlock,
       availabilityZone: az,
       timestamp: new Date()
@@ -101,6 +123,4 @@ const handler = async (event, context) => {
     }
   }
 };
-
-exports.handler = handler;
 

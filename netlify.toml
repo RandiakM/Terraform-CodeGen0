@@ -6,11 +6,21 @@ command = "cd frontend && npm install && CI=false npm run build"
 [functions]
 directory = "api/functions"
 node_bundler = "esbuild"
+included_files = ["api/utils/**"]
 
 [[redirects]]
-from = "/.netlify/functions/*"
-to = "/.netlify/functions/:splat"
+from = "/.netlify/functions/vpc-list"
+to = "/.netlify/functions/vpc-list"
 status = 200
+force = true
+methods = ["GET", "OPTIONS"]
+
+[[redirects]]
+from = "/.netlify/functions/subnet-generate"
+to = "/.netlify/functions/subnet-generate"
+status = 200
+force = true
+methods = ["POST", "OPTIONS"]
 
 [[redirects]]
 from = "/*"
