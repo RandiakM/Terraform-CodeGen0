@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
+import config from '../config';
 
 const FinalTerraformGenerator = () => {
   const [generatedCode, setGeneratedCode] = useState('');
@@ -15,7 +16,7 @@ const FinalTerraformGenerator = () => {
 
     try {
       const response = await axios.get(
-        'https://terraform-codegen0.netlify.app/api/terraform/generate-final',
+        `${config.apiUrl}/terraform-generate-final`,
         {
           timeout: 10000
         }
