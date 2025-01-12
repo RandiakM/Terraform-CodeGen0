@@ -1,19 +1,31 @@
 const { MongoClient } = require('mongodb');
-const { generateTerraformNAT } = require('../utils/terraform');
+const { ObjectId } = require('mongodb');
 
-const handler = async (event, context) => {
+exports.handler = async function(event, context) {
+  // Handle OPTIONS request for CORS
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+      }
+    };
+  }
+
   let client;
   try {
     const { name, subnetId, allocationId } = JSON.parse(event.body);
     
+    // Input validation
     if (!name || !subnetId || !allocationId) {
       return {
         statusCode: 400,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type'
         },
         body: JSON.stringify({ 
           success: false, 
@@ -27,7 +39,7 @@ const handler = async (event, context) => {
 
     // Verify Subnet exists
     const subnet = await db.collection('user_inputs').findOne({ 
-      _id: subnetId, 
+      _id: new ObjectId(subnetId),
       type: 'subnet' 
     });
 
@@ -46,13 +58,25 @@ const handler = async (event, context) => {
       };
     }
 
-    const terraformCode = generateTerraformNAT(name, subnet.name, allocationId);
+    // Generate Terraform code
+    const terraformCode = `
+resource "aws_nat_gateway" "${name}" {
+  allocation_id = "${allocationId}"
+  subnet_id     = aws_subnet.${subnet.name}.id
+
+  tags = {
+    Name = "${name}"
+  }
+
+  # Ensure the Internet Gateway is created first
+  depends_on = [aws_internet_gateway.main]
+}`;
     
     // Save user input
     const userInput = await db.collection('user_inputs').insertOne({
       type: 'nat',
       name,
-      subnetId,
+      subnetId: new ObjectId(subnetId),
       allocationId,
       timestamp: new Date()
     });
@@ -100,6 +124,4 @@ const handler = async (event, context) => {
     }
   }
 };
-
-exports.handler = handler;
 

@@ -1,16 +1,18 @@
 const { MongoClient } = require('mongodb');
-const serverless = require('serverless-http');
-const express = require('express');
-const cors = require('cors');
 
-const app = express();
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+exports.handler = async function(event, context) {
+  // Handle OPTIONS request for CORS
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS'
+      }
+    };
+  }
 
-app.get('/', async (req, res) => {
   let client;
   try {
     client = await MongoClient.connect(process.env.MONGODB_URI);
@@ -20,23 +22,38 @@ app.get('/', async (req, res) => {
       .find({ type: 'subnet' })
       .toArray();
 
-    res.json({
-      success: true,
-      subnets: subnets
-    });
+    return {
+      statusCode: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS'
+      },
+      body: JSON.stringify({
+        success: true,
+        subnets: subnets
+      })
+    };
   } catch (error) {
     console.error('Error fetching subnets:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to fetch subnets',
-      details: error.message 
-    });
+    return {
+      statusCode: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      },
+      body: JSON.stringify({ 
+        success: false, 
+        error: 'Failed to fetch subnets',
+        details: error.message 
+      })
+    };
   } finally {
     if (client) {
       await client.close();
     }
   }
-});
-
-exports.handler = serverless(app);
+};
 

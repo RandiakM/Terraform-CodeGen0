@@ -16,6 +16,13 @@ force = true
 methods = ["GET", "OPTIONS"]
 
 [[redirects]]
+from = "/.netlify/functions/subnet-list"
+to = "/.netlify/functions/subnet-list"
+status = 200
+force = true
+methods = ["GET", "OPTIONS"]
+
+[[redirects]]
 from = "/.netlify/functions/subnet-generate"
 to = "/.netlify/functions/subnet-generate"
 status = 200
@@ -32,6 +39,13 @@ methods = ["POST", "OPTIONS"]
 [[redirects]]
 from = "/.netlify/functions/igw-generate"
 to = "/.netlify/functions/igw-generate"
+status = 200
+force = true
+methods = ["POST", "OPTIONS"]
+
+[[redirects]]
+from = "/.netlify/functions/nat-generate"
+to = "/.netlify/functions/nat-generate"
 status = 200
 force = true
 methods = ["POST", "OPTIONS"]
