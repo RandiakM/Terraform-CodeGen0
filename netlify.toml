@@ -23,6 +23,13 @@ force = true
 methods = ["POST", "OPTIONS"]
 
 [[redirects]]
+from = "/.netlify/functions/route-table-generate"
+to = "/.netlify/functions/route-table-generate"
+status = 200
+force = true
+methods = ["POST", "OPTIONS"]
+
+[[redirects]]
 from = "/*"
 to = "/index.html"
 status = 200
