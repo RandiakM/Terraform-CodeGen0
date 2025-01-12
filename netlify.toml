@@ -51,6 +51,13 @@ force = true
 methods = ["POST", "OPTIONS"]
 
 [[redirects]]
+from = "/.netlify/functions/terraform-generate-final"
+to = "/.netlify/functions/terraform-generate-final"
+status = 200
+force = true
+methods = ["GET", "OPTIONS"]
+
+[[redirects]]
 from = "/*"
 to = "/index.html"
 status = 200
