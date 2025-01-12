@@ -1,0 +1,22 @@
+{
+    "name": "vpc-terraform-generator-api",
+    "version": "1.0.0",
+    "description": "API for Terraform code generator",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js",
+      "dev": "nodemon server.js"
+    },
+    "dependencies": {
+      "cors": "^2.8.5",
+      "dotenv": "^16.3.1",
+      "express": "^4.17.1",
+      "mongodb": "^5.7.0",
+      "mongoose": "^7.4.1"
+    },
+    "devDependencies": {
+      "nodemon": "^2.0.12"
+    }
+  }
+  
+  
