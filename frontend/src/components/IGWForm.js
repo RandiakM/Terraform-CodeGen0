@@ -42,10 +42,12 @@ const IGWForm = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:3000/api/igw/generate',
+        '/.netlify/functions/igw-generate',
         { name, vpcId },
         {
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json'
+          },
           timeout: 5000
         }
       );
