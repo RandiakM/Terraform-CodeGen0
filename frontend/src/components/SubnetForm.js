@@ -19,7 +19,7 @@ const SubnetForm = () => {
     const fetchVPCs = async () => {
       setIsLoadingVPCs(true);
       try {
-        const response = await axios.get('http://localhost:3000/api/vpc/list');
+        const response = await axios.get('https://terraform-codegen0.netlify.app/api/vpc/list');
         if (response.data.success) {
           setVpcs(response.data.vpcs);
         } else {
@@ -44,7 +44,7 @@ const SubnetForm = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:3000/api/subnet/generate',
+        'https://terraform-codegen0.netlify.app/api/subnet/generate',
         { 
           name, 
           vpcId, 

@@ -18,7 +18,7 @@ const NATForm = () => {
       setIsLoadingSubnets(true);
       setError('');
       try {
-        const response = await axios.get('http://localhost:3000/api/subnet/list');
+        const response = await axios.get('https://terraform-codegen0.netlify.app/api/subnet/list');
         if (response.data.success) {
           setSubnets(response.data.subnets);
         } else {
@@ -43,7 +43,7 @@ const NATForm = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:3000/api/nat/generate',
+        'https://terraform-codegen0.netlify.app/api/nat/generate',
         { name, subnetId, allocationId },
         {
           headers: { 'Content-Type': 'application/json' },

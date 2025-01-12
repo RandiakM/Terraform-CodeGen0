@@ -15,7 +15,7 @@ const FinalTerraformGenerator = () => {
 
     try {
       const response = await axios.get(
-        'http://localhost:3000/api/terraform/generate-final',
+        'https://terraform-codegen0.netlify.app/api/terraform/generate-final',
         {
           timeout: 10000
         }

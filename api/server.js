@@ -22,7 +22,7 @@ const port = process.env.PORT || 3000;
 connectDB();
 
 app.use(cors({
-  origin: 'http://localhost:3001',
+  origin: 'https://terraform-codegen0.netlify.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
