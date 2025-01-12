@@ -30,6 +30,13 @@ force = true
 methods = ["POST", "OPTIONS"]
 
 [[redirects]]
+from = "/.netlify/functions/igw-generate"
+to = "/.netlify/functions/igw-generate"
+status = 200
+force = true
+methods = ["POST", "OPTIONS"]
+
+[[redirects]]
 from = "/*"
 to = "/index.html"
 status = 200
